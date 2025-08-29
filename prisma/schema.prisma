@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model horarios {
+  id_horario      Int               @id(map: "PK__horarios__DE60F33A13F84054") @default(autoincrement())
+  tiempo_inicio   DateTime          @db.Time
+  tiempo_fin      DateTime          @db.Time
+  descripcion     String            @db.VarChar(35)
+  marcas          marcas[]
+  usuario_horario usuario_horario[]
+}
+
+model usuario_horario {
+  id_usuario_horario Int      @id(map: "PK__usuario___E7DD7040B22BCB13") @default(autoincrement())
+  user_id            Int
+  id_horario         Int
+  fecha              DateTime @db.Date
+  activo             Int?     @default(1, map: "DF__usuario_h__activ__3E52440B") @db.TinyInt
+  horarios           horarios @relation(fields: [id_horario], references: [id_horario], onUpdate: NoAction, map: "FK__usuario_h__id_ho__403A8C7D")
+  usuarios           usuarios @relation(fields: [user_id], references: [user_id], onUpdate: NoAction, map: "FK__usuario_h__user___3F466844")
+}
+
+model usuarios {
+  user_id         Int               @id(map: "PK__usuarios__CB9A1CFF4082384A")
+  dni             String            @unique(map: "UQ__usuarios__D87608A7E8FECD3E") @db.VarChar(35)
+  password        Int?              @unique(map: "UQ__usuarios__6E2DBEDE0C786935")
+  rol             Int?              @default(0, map: "DF__usuarios__role__398D8EEE") @db.TinyInt
+  nombre          String            @db.VarChar(50)
+  activo          Int?              @default(0, map: "DF__usuarios__activo__412EB0B6") @db.TinyInt
+  marcas          marcas[]
+  usuario_horario usuario_horario[]
+}
+
+model marcas {
+  id_marca   Int      @id(map: "PK__marcas__7E43E99E630D3EBC") @default(autoincrement())
+  user_id    Int
+  tiempo     DateTime @db.DateTime
+  id_horario Int
+  horarios   horarios @relation(fields: [id_horario], references: [id_horario], onUpdate: NoAction, map: "fk__horarioMarcas")
+  usuarios   usuarios @relation(fields: [user_id], references: [user_id], onUpdate: NoAction, map: "FK__marcas__user_id__44FF419A")
+}

@@ -1,0 +1,21 @@
+import { BiometricRepository, ScheduleRepository, ChecksRepository, UsersRepository } from "../repository";
+import { BiometricController, StartSee } from "../http-api";
+import { BiometricApplication } from "../../app";
+import { prisma } from "../../helper/prisma.helper";
+import { ScheduleService } from "../../app/schedule/schedule.service";
+import { ChecksService } from "../../app/checks/checks.service";
+import "dotenv/config"
+import Zkteco from "zkteco-js";
+const IP = process.env.IP || '';
+const schdlRepo = new ScheduleRepository(prisma);
+const usersRepo = new UsersRepository(prisma);
+const schdlService = new ScheduleService(schdlRepo);
+const checksRepo = new ChecksRepository(prisma);
+const checksService = new ChecksService(checksRepo);
+const device = new Zkteco(IP, 4370, 5200, 5000);
+const bioRepo = new BiometricRepository(device);
+const bioApp = new BiometricApplication(bioRepo, schdlService, checksService, usersRepo);
+// bioApp.refreshTime();
+const bioClt = () => new BiometricController(bioApp);
+const startSee = () => new StartSee(bioApp);
+export { bioClt, startSee };

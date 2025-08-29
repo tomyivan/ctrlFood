@@ -1,32 +1,31 @@
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
+import "dotenv/config"; 
+import { ErrorHandlerMiddleware } from "./common";
+import { 
+    routerBio, 
+    routerSee, 
+    routerSchdl,
+    routerUsers,
+    routerChk
+} from "./infraestructure";
+const app = express();
+const PORT = process.env.PORT;
+if( !PORT ) {
+    console.error("No PORT environment variable set");
+    process.exit(1);
+}
+app.use(cors());
+app.use(morgan("dev"));
+app.use(express.json());
 
-
-import Zkteco from "zkteco-js";
-import "dotenv/config";
-const IP = process.env.IP || '';
-const manageZktecoDevice = async () => {
-    console.log("Starting ZKTeco device management...");
-    console.log(`Connecting to device at IP: ${IP}`);
-    const device = new Zkteco(IP, 4370, 5200, 5000);
-
-    try {
-        // Create socket connection to the device
-        await device.createSocket();
-
-        // Retrieve and log all attendance records
-        // const attendanceLogs = await device.getAttendances();
-        // console.log(attendanceLogs);
-
-        // Listen for real-time logs
-        await device.getRealTimeLogs((realTimeLog) => {
-            // console.log("Real-time log received:");
-            console.log(realTimeLog);
-        });
-
-        // Manually disconnect after using real-time logs
-        // await device.disconnect();
-    } catch (error) {
-        console.error("Error:", error);
-    }
-};
-
-manageZktecoDevice();
+app.use('/api/v1/biometric', routerBio);
+app.use('/api/v1/events', routerSee);
+app.use('/api/v1/schedule', routerSchdl);
+app.use('/api/v1/users', routerUsers);
+app.use('/api/v1/check', routerChk);
+app.use(ErrorHandlerMiddleware.handleError.bind(ErrorHandlerMiddleware));
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
