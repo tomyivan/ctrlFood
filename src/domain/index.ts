@@ -8,3 +8,5 @@ export type { ISchedule } from "./schedule/ischedule.domain";
 
 export type { ChecksDTO, Checks, CheckFilter } from "./checks/check";
 export type { IChecks } from "./checks/ichecks.domain";
+
+export type { ITransaction } from "./transaction/itransaction.domain";

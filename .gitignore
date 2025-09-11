@@ -2,3 +2,4 @@ node_modules
 .ENV
 /src/generated/prisma
 .txt
+dist
