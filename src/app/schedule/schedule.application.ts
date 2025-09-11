@@ -16,10 +16,11 @@ export class ScheduleApplication {
         return this._scheduleCached.getAllFood();
     }
 
-    async addSchedule(data: Schedule[]): Promise<number> {
-        
-        await this._scheduleRepo.deleteSchedule(String(data[0].date));
-        return this._scheduleRepo.addSchedule(data);
+    async addSchedule(data: Schedule[], rangeDate?: {start: string , end : string}): Promise<number> {
+        await this._scheduleRepo.deleteSchedule(data, rangeDate);
+        const newData = data.filter(d => d.idSchedule !== 0);
+        if (newData.length === 0) return 0;
+        return this._scheduleRepo.addSchedule(newData);
     }
 
     getAllSchedule(q?: ScheduleFilter): Promise<ScheduleDTO[]> {

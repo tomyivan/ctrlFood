@@ -4,6 +4,7 @@ declare module "zkteco-js" {
         constructor(ip: string, port: number, timeout: number, retryInterval: number);
         createSocket(): Promise<void>;
         enableDevice(): Promise<void>;
+        disableDevice(): Promise<void>;
         getInfo(): Promise<any>;
         getVersion(): Promise<string>;
         getUsers(): Promise< { data: {

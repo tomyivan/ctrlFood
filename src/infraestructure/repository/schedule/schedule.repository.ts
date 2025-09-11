@@ -35,15 +35,37 @@ export class ScheduleRepository implements ISchedule {
         return response.count;
     }
 
-    async deleteSchedule(fecha: string): Promise<number> {
-        const response = await this._prisma.usuario_horario.deleteMany({
-            where: { fecha: new Date(fecha) }
-        });
-        return response.count;
+    async deleteSchedule(data: Schedule[], rangeDate?: {start: string , end : string}): Promise<number> {
+        let response = { count: 0 };
+        if (rangeDate?.start && rangeDate?.end) {
+            response = await this._prisma.usuario_horario.deleteMany({
+                where: {
+                    fecha: {
+                        gte: new Date(rangeDate.start),
+                        lte: new Date(rangeDate.end)
+                    },
+                    user_id: { in: data.map(item => item.userId) }
+                }
+            });
+        }else{
+            response = await this._prisma.usuario_horario.deleteMany({
+                where: { 
+                    fecha: { in: data.map(item => new Date(String(item.date))) },
+                    user_id: { in: data.map(item => item.userId) } }
+            });
+        }
+    return response.count;
     }
+
+    
 
     getAllSchedule( q?: ScheduleFilter ): Promise<ScheduleDTO[]> {
         return this._prisma.$queryRaw<ScheduleDTO[]>(ScheduleQuery.getAllSchedules(q));
+    }
+
+    async getEmployee(userId: number): Promise<string> {
+        const result = await this._prisma.$queryRaw<any[]>(ScheduleQuery.getEmployee(userId));
+        return result[0]?.employee || '';
     }
 
 }

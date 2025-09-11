@@ -18,6 +18,6 @@ export class ChecksQuery {
         if (q?.startDate && q?.endDate) {
             query.push(Prisma.sql`CAST(mr.tiempo AS DATE) BETWEEN ${q.startDate} AND ${q.endDate}`);
         }
-        return Prisma.sql`${baseQuery} ${query.length > 0 ? Prisma.sql`WHERE ${Prisma.join(query, " AND ")}` : Prisma.sql``}`;
+        return Prisma.sql`${baseQuery} ${query.length > 0 ? Prisma.sql`WHERE ${Prisma.join(query, " AND ")}` : Prisma.sql``} ORDER BY mr.id_marca DESC`;
     }
 }

@@ -15,8 +15,6 @@ export class DateUtil {
         const startHour = DateUtil.convertHour(start);
         const endHour = DateUtil.convertHour(end);
         const checkHour = DateUtil.convertHour(check);
-
-        console.log(`checkHour: ${checkHour}, startHour: ${startHour}, endHour: ${endHour}`);
         return checkHour >= startHour && checkHour <= endHour;
     }
 

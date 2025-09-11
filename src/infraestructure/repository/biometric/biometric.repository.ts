@@ -1,12 +1,18 @@
 import  type { checkTimeBioDTO, IBiometric, UserBioDTO, UserBio } from "../../../domain";
-
 import type Zkteco from "zkteco-js";
+
 export class BiometricRepository implements IBiometric {
-    constructor(private readonly _device : Zkteco) {
-        
-    }
+    constructor(private readonly _device : Zkteco) {}
+
     private async connectToDevice() {
-        await this._device.createSocket();
+        try {            
+            await this._device.createSocket();
+        } catch (error) {
+            console.log(error)
+            console.log("Reintentando conexión...");
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Esperar 2 segundos antes de reintentar
+            await this.connectToDevice();
+        }
     }
 
     async getUser(): Promise<UserBioDTO[]> {
@@ -32,6 +38,14 @@ export class BiometricRepository implements IBiometric {
         } catch (error) {
             console.error("Error refreshing time:", error);
         }
+    }
 
+    async voiceTest(voice: number): Promise<void> {
+        try {
+            await this._device.voiceTest(voice);
+        } catch (error) {
+            console.error("Error testing voice:", error);
+            // throw error;
+        }
     }
 }

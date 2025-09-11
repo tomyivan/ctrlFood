@@ -6,7 +6,7 @@ export class ScheduleQuery {
     }
 
     static getAllSchedules( q?: ScheduleFilter ): Prisma.Sql {
-        const baseQuery = Prisma.sql`SELECT us.nombre employee, us.user_id userId, fecha date, us.dni, hr.descripcion description FROM usuario_horario uh
+        const baseQuery = Prisma.sql`SELECT us.nombre employee, us.user_id userId, fecha date, us.dni, hr.descripcion description, hr.tiempo_inicio startTime, hr.tiempo_fin endTime, uh.id_horario idSchedule FROM usuario_horario uh
 INNER JOIN usuarios us ON uh.user_id = us.user_id
 INNER JOIN horarios hr ON uh.id_horario = hr.id_horario`;
         const filters: Prisma.Sql[] = [];
@@ -22,6 +22,13 @@ INNER JOIN horarios hr ON uh.id_horario = hr.id_horario`;
         if (q?.dni) {
             filters.push(Prisma.sql`us.dni = ${q.dni}`);
         }
+        if (q?.startDate && q?.endDate) {
+            filters.push(Prisma.sql`CAST(uh.fecha AS DATE) BETWEEN ${q.startDate} AND ${q.endDate}`);
+        }
         return Prisma.sql`${baseQuery} ${filters.length ? Prisma.sql`WHERE ${Prisma.join(filters, " AND ")}` : Prisma.sql``}`;
     }
+    static getEmployee(userId: number): Prisma.Sql {
+        return Prisma.sql`SELECT us.nombre employee FROM usuarios us WHERE us.user_id = ${userId}`;
+    }
+
 }

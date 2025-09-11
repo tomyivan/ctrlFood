@@ -24,11 +24,16 @@ export interface ScheduleDTO {
     date: Date;
     dni: string;
     description: string;
+    startTime: Date;
+    endTime: Date;
+    idSchedule: number;
 }
 
 export interface ScheduleFilter {
     userId?: number,
     idSchedule?: number,
     date?: string,
-    dni?: string   
+    dni?: string,
+    startDate?: string,
+    endDate?: string,   
 }

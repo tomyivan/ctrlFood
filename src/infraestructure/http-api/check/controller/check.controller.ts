@@ -8,7 +8,6 @@ export class ChecksController {
             const q = req.query;
             const response = await this._checksApp.getAll(q);
             response.length === 0 ? ResponseApi.notFoundResponse(res, "No se encontraron registros", []) : ResponseApi.successResponse(res, "Registros encontrados", response);
-
         } catch (error) {
             next(error);
         }

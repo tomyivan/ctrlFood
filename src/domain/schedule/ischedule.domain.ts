@@ -5,7 +5,7 @@ export interface ISchedule {
     update( data: ScheduleFood ): Promise<number>,
     getAllFood(): Promise<ScheduleFoodDTO[]>,
     addSchedule(data: Schedule[]): Promise<number>,
-    deleteSchedule(fecha: string): Promise<number>,
+    deleteSchedule(data:Schedule[], rangeDate?: {start: string , end : string}): Promise<number>,
     getAllSchedule( q?: ScheduleFilter ): Promise<ScheduleDTO[]>,
-    
+    getEmployee(userId: number): Promise<string>
 }

@@ -1,4 +1,4 @@
-import type { checkTimeBioDTO, IBiometric, IUser, User, UserBio } from "../../domain";
+import type { checkTimeBioDTO, IBiometric, IUser, ScheduleDTO, User, UserBio } from "../../domain";
 import type { ScheduleService } from "../schedule/schedule.service";
 import type { ChecksService } from "../checks/checks.service";
 import { DateUtil } from "../../util";
@@ -39,22 +39,22 @@ export class BiometricApplication {
         return this._bio.getRealTimeLogs(async (data) => {
             if( data.ok ) {
                 const newDate = DateUtil.exactDate( data.attTime );
-                const schdlFood = await this._scheduleSrv.validationSchedule({ userId: Number(data.userId), date: DateUtil.convertDate(newDate) }, newDate);                
-                if( schdlFood ) {
+                const schdlFood = await this._scheduleSrv.validationSchedule({ userId: Number(data.userId), date: DateUtil.convertDate(newDate) }, newDate);
+                if( schdlFood?.ok && (schdlFood as ScheduleDTO).idSchedule ) {
                     idCheck = await this._checksSrv.addCheck({
                         userId: Number(data.userId),
                         checkTime: newDate,
-                        idSchedule: schdlFood.idSchedule
-                    });                  
+                        idSchedule: (schdlFood as ScheduleDTO).idSchedule
+                    });
                 }
                 callback({
-                    ok: idCheck > 0,
+                    ok: idCheck > 0 && schdlFood?.ok,
                     attTime: newDate,
                     userId: data.userId,
-                    description: !schdlFood ? "Fuera de rango" : schdlFood.description,
+                    description: idCheck === 0 && +schdlFood.ok ? "Ya marco" : (!schdlFood.ok ? "Fuera de rango" : (schdlFood as any)?.description),
                     employee: !schdlFood ? "Desconocido" : schdlFood.employee
                 })
-                
+                this._bio.voiceTest(idCheck > 0 && schdlFood?.ok ? 0 : 2);
             }else{
                 callback({
                     ok: false,
@@ -63,6 +63,7 @@ export class BiometricApplication {
                     description: "No tiene permisos",
                     employee: "Desconocido"
                 });
+                this._bio.voiceTest(2);
             }
         });
     }

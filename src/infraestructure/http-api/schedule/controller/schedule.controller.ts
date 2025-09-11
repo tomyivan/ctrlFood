@@ -27,9 +27,10 @@ export class ScheduleController {
 
     async addSchedule(req: Request, res: Response, next: NextFunction) {
         try {
+            const query = req.query;
             const { schedules } = req.body;
-            const result = await this._scheduleApp.addSchedule(schedules);
-            result ? ResponseApi.successResponse(res, "Horarios agregados", { result }) : ResponseApi.notFoundResponse(res, "No se pudieron agregar los horarios", {});
+            const result = await this._scheduleApp.addSchedule(schedules, query as {start: string , end : string} );
+            result > 0 ? ResponseApi.successResponse(res, "Horarios agregados", { result }) : ResponseApi.successResponse(res, "Se eliminaron los horarios", {}); 
         } catch (error) {
             next(error);
         }  

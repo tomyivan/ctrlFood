@@ -14,21 +14,20 @@ export class ScheduleService {
         return data;
     }
 
-    async existSchedule( q: ScheduleFilter ): Promise<ScheduleDTO> {
-        const response = await this._schedule.getAllSchedule(q);
-        return response[0];
-    }
 
-    async validationSchedule( q: ScheduleFilter, check: Date ): Promise<ScheduleFoodDTO & ScheduleDTO | false > {
-        const [ schdlFood, existSchedule ] = await Promise.all([
-            this.getAllFood(),
-            this.existSchedule(q)
+    async validationSchedule( q: ScheduleFilter, check: Date ): Promise<ScheduleDTO & {ok:boolean} | {
+        ok: boolean;
+        employee: string;
+    } > {
+        const [ schedules, employee ] = await Promise.all([
+            this._schedule.getAllSchedule(q),
+            this._schedule.getEmployee(Number(q.userId))
         ]);
-        if( !existSchedule ) return false;
-        for (const item of schdlFood) {
-            if(DateUtil.isInRangeHour( item.startTime, item.endTime, check)) return {...existSchedule, ...item};
+        if( !schedules ) return { ok: false, employee: "Desconocido" };
+        for (const item of schedules) {
+            if(DateUtil.isInRangeHour( item.startTime, item.endTime, check)) return {...item, ok: true};
         }
-        return false;
+        return { ok: false, employee: employee === '' || employee === undefined ? "Desconocido" : employee };
     }
 
     clearCache() {

@@ -8,7 +8,7 @@ export class ChecksService {
             idSchedule: data.idSchedule
          });
         if( check.length > 0 ) {
-            return 9999999;
+            return 0;
         }
         return this._checksRepository.add(data);
     }

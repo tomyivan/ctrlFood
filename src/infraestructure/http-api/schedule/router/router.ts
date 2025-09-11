@@ -2,10 +2,10 @@ import { SchdlCtrl, SchMddl } from "../../../dependences/schedule.dependences";
 import { Router } from "express";
 import { CredentialMiddleware } from "../../../../common";
 import { check, query } from "express-validator";
+import { validationField } from "../../../../util";
 const routerSchdl = Router();
-routerSchdl.get("/", CredentialMiddleware.validationJWT,
-    CredentialMiddleware.checkRole([1])    
-    , SchdlCtrl().getAllFood.bind(SchdlCtrl()));
+routerSchdl.get("/", 
+     SchdlCtrl().getAllFood.bind(SchdlCtrl()));
 
 routerSchdl.put("/updateFood", CredentialMiddleware.validationJWT,
     CredentialMiddleware.checkRole([1]),[
@@ -23,6 +23,7 @@ routerSchdl.post("/addSchedule", CredentialMiddleware.validationJWT,
         check('schedules.*.userId', 'El id del usuario es obligatorio').not().isEmpty(),
         check('schedules.*.idSchedule', 'El id del horario es obligatorio').not().isEmpty(),
         check('schedules.*.date', 'La fecha de inicio es obligatoria').not().isEmpty(),
+        validationField
     ],
     // SchMddl().validateSchedule.bind(SchMddl()),
     SchdlCtrl().addSchedule.bind(SchdlCtrl())
