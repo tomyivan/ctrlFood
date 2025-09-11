@@ -12,4 +12,16 @@ export class ChecksController {
             next(error);
         }
     }
+
+    async checkCount(req: Request, res: Response, next: NextFunction) {
+        try {
+            const {date} = req.query;
+            const response = await this._checksApp.countCheck(date as string);
+            ResponseApi.successResponse(res, "Conteo de marcas", response);
+        }
+        catch (error) {
+            next(error);
+        }
+            
+    }
 }

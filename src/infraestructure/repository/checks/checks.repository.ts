@@ -1,4 +1,4 @@
-import type { IChecks, Checks, ChecksDTO, CheckFilter } from "../../../domain";
+import type { IChecks, Checks, ChecksDTO, CheckFilter, CheckCount } from "../../../domain";
 import type { Prisma } from "@prisma/client";
 import { ChecksQuery } from "../extendDB/checks.query";
 export class ChecksRepository implements IChecks {
@@ -10,6 +10,11 @@ export class ChecksRepository implements IChecks {
 
     getAll(q?: CheckFilter): Promise<ChecksDTO[]> {
         return this._prisma.$queryRaw(ChecksQuery.getAll(q));
+    }
+
+    async countCheck(date: string): Promise<CheckCount> {
+        const response = await this._prisma.$queryRaw<CheckCount[]>(ChecksQuery.countCheck(date))
+        return response[0] ?? { breakfast: 0, lunch: 0, tea: 0, dinner: 0 };
     }
 
     async add(data: Checks): Promise<number> {

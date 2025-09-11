@@ -20,4 +20,13 @@ export class ChecksQuery {
         }
         return Prisma.sql`${baseQuery} ${query.length > 0 ? Prisma.sql`WHERE ${Prisma.join(query, " AND ")}` : Prisma.sql``} ORDER BY mr.id_marca DESC`;
     }
+
+    static countCheck(date: string): Prisma.Sql {
+        return Prisma.sql`SELECT 
+  COALESCE(SUM(CASE WHEN id_horario = 1 THEN 1 ELSE 0 END), 0) AS breakfast,
+  COALESCE(SUM(CASE WHEN id_horario = 2 THEN 1 ELSE 0 END), 0) AS lunch,
+  COALESCE(SUM(CASE WHEN id_horario = 3 THEN 1 ELSE 0 END), 0) AS tea,
+  COALESCE(SUM(CASE WHEN id_horario = 4 THEN 1 ELSE 0 END), 0) AS dinner
+FROM marcas WHERE CAST(tiempo as DATE) = ${date}`
+    }
 }

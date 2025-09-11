@@ -21,3 +21,9 @@ export interface ChecksDTO {
     employee:string
 }
 
+export interface CheckCount {
+    breakfast: number,
+    lunch: number,
+    tea: number,
+    dinner: number
+}
