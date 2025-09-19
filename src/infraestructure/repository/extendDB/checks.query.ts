@@ -2,9 +2,11 @@ import { Prisma } from "@prisma/client";
 import { CheckFilter } from "../../../domain";
 export class ChecksQuery {
     static getAll(q?: CheckFilter): Prisma.Sql {
-        let baseQuery =  Prisma.sql`SELECT mr.id_marca idCheck, mr.user_id userId, CAST(mr.tiempo AS TIME) checkTime, CAST(mr.tiempo AS DATE) checkDate, hr.descripcion description, us.nombre employee FROM marcas mr
+        let baseQuery =  Prisma.sql`SELECT mr.id_marca idCheck, mr.user_id userId, CAST(mr.tiempo AS TIME) checkTime, CAST(mr.tiempo AS DATE) checkDate, 
+		hr.descripcion description, us.nombre employee, em.area FROM marcas mr
         INNER JOIN horarios hr ON hr.id_horario = mr.id_horario
-		INNER JOIN usuarios us ON us.user_id = mr.user_id`;
+		INNER JOIN usuarios us ON us.user_id = mr.user_id
+		LEFT JOIN rrhhDB.dbo.empleados_view as em on em.dni = us.dni`;
         const query: Prisma.Sql[] = []
         if (q?.userId) {
             query.push(Prisma.sql`mr.user_id = ${q.userId}`);

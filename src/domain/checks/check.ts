@@ -18,7 +18,8 @@ export interface ChecksDTO {
     checkTime: Date,
     checkDate: Date,
     description: string,
-    employee:string
+    employee:string,
+    area: string | null
 }
 
 export interface CheckCount {
