@@ -29,7 +29,7 @@ model usuario_horario {
 model usuarios {
   user_id         Int               @id(map: "PK__usuarios__CB9A1CFF4082384A")
   dni             String            @unique(map: "UQ__usuarios__D87608A7E8FECD3E") @db.VarChar(35)
-  password        Int?              @unique(map: "UQ__usuarios__6E2DBEDE0C786935")
+  password        Int?
   rol             Int?              @default(0, map: "DF__usuarios__role__398D8EEE") @db.TinyInt
   nombre          String            @db.VarChar(50)
   activo          Int?              @default(0, map: "DF__usuarios__activo__412EB0B6") @db.TinyInt
@@ -38,10 +38,15 @@ model usuarios {
 }
 
 model marcas {
-  id_marca   Int      @id(map: "PK__marcas__7E43E99E630D3EBC") @default(autoincrement())
-  user_id    Int
-  tiempo     DateTime @db.DateTime
-  id_horario Int
-  horarios   horarios @relation(fields: [id_horario], references: [id_horario], onUpdate: NoAction, map: "fk__horarioMarcas")
-  usuarios   usuarios @relation(fields: [user_id], references: [user_id], onUpdate: NoAction, map: "FK__marcas__user_id__44FF419A")
+  id_marca      Int      @id(map: "PK__marcas__7E43E99E630D3EBC") @default(autoincrement())
+  user_id       Int
+  tiempo        DateTime @db.DateTime
+  id_horario    Int
+  observaciones String?  @db.Text
+  hora          DateTime @db.Time
+  fecha         DateTime @db.Date
+  horarios      horarios @relation(fields: [id_horario], references: [id_horario], onUpdate: NoAction, map: "fk__horarioMarcas")
+  usuarios      usuarios @relation(fields: [user_id], references: [user_id], onUpdate: NoAction, map: "FK__marcas__user_id__44FF419A")
+
+  @@unique([user_id, id_horario, fecha], map: "UQ_MARCAS")
 }

@@ -9,7 +9,7 @@ export interface Checks {
     idCheck?: number,
     userId: number,
     checkTime: Date,
-    idSchedule: number
+    idSchedule: number,
 }
 
 export interface ChecksDTO {

@@ -22,7 +22,9 @@ export class ChecksRepository implements IChecks {
             data: {
                 user_id: data.userId,
                 tiempo: data.checkTime,
-                id_horario: data.idSchedule                
+                id_horario: data.idSchedule,
+                fecha: data.checkTime,
+                hora: data.checkTime
             }
         })
         return response.id_marca ?? 0;
