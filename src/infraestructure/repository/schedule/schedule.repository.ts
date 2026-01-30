@@ -1,4 +1,4 @@
-import { ISchedule, Schedule, ScheduleDTO, ScheduleFilter, ScheduleFood, ScheduleFoodDTO } from "../../../domain";
+import { ISchedule, Schedule, ScheduleCopy, ScheduleDTO, ScheduleFilter, ScheduleFood, ScheduleFoodDTO } from "../../../domain";
 import type { Prisma, PrismaClient } from "@prisma/client";
 import { ScheduleQuery } from "../extendDB/schedule.query";
 export class ScheduleRepository implements ISchedule {
@@ -57,8 +57,6 @@ export class ScheduleRepository implements ISchedule {
     return response.count;
     }
 
-    
-
     getAllSchedule( q?: ScheduleFilter ): Promise<ScheduleDTO[]> {
         return this._prisma.$queryRaw<ScheduleDTO[]>(ScheduleQuery.getAllSchedules(q));
     }
@@ -66,6 +64,11 @@ export class ScheduleRepository implements ISchedule {
     async getEmployee(userId: number): Promise<string> {
         const result = await this._prisma.$queryRaw<any[]>(ScheduleQuery.getEmployee(userId));
         return result[0]?.employee || '';
+    }
+
+    async copySchedulesFromDate(copy: ScheduleCopy): Promise<number> {
+        const result = await this._prisma.$executeRaw<number>(ScheduleQuery.copySchedulesFromDate(copy));
+        return result;
     }
 
 }

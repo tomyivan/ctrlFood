@@ -39,8 +39,19 @@ export class ScheduleController {
     async getAllSchedule(req: Request, res: Response, next: NextFunction) {
         try {
             const q = req.query;
+            
             const result = await this._scheduleApp.getAllSchedule(q);
             result.length ? ResponseApi.successResponse(res, "Lista de horarios", result) : ResponseApi.notFoundResponse(res, "No se encontraron horarios", []);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async copySchedules(req: Request, res: Response, next: NextFunction) {
+        try {
+            const {copy}  = req.body;
+            const result = await this._scheduleApp.copySchedules(copy);
+            result > 0 ? ResponseApi.successResponse(res, "Horarios copiados", { result }) : ResponseApi.notFoundResponse(res, "No se pudieron copiar los horarios", {});
         } catch (error) {
             next(error);
         }

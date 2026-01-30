@@ -37,3 +37,14 @@ export interface ScheduleFilter {
     startDate?: string,
     endDate?: string,   
 }
+
+export interface ScheduleCopy{
+    fromDate: {
+        year: number,
+        month: number
+    },
+    toDate: {
+        year: number,
+        month: number
+    }
+}

@@ -1,5 +1,5 @@
 import { ErrorCustom } from "../../common/error/error.custom";
-import type { ScheduleFood, ScheduleFoodDTO, ISchedule, Schedule, ScheduleFilter, ScheduleDTO } from "../../domain"
+import type { ScheduleFood, ScheduleFoodDTO, ISchedule, Schedule, ScheduleFilter, ScheduleDTO, ScheduleCopy } from "../../domain"
 import type { ScheduleService } from "./schedule.service";
 
 export class ScheduleApplication {
@@ -25,6 +25,10 @@ export class ScheduleApplication {
 
     getAllSchedule(q?: ScheduleFilter): Promise<ScheduleDTO[]> {
         return this._scheduleRepo.getAllSchedule(q);
+    }
+
+    copySchedules(copy: ScheduleCopy): Promise<number> {
+        return this._scheduleRepo.copySchedulesFromDate(copy);
     }
 
 }

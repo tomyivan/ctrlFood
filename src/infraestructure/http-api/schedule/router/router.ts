@@ -40,6 +40,18 @@ routerSchdl.get("/all", CredentialMiddleware.validationJWT,
     SchdlCtrl().getAllSchedule.bind(SchdlCtrl())
 );
 
+routerSchdl.post("/copySchedule", CredentialMiddleware.validationJWT,
+    CredentialMiddleware.checkRole([1]),[
+        check('copy.fromDate.year', 'El año de origen es obligatorio').not().isEmpty().isInt().withMessage('El año de origen debe ser un número entero'),
+        check('copy.fromDate.month', 'El mes de origen es obligatorio').not().isEmpty().isInt().withMessage('El mes de origen debe ser un número entero'),
+        check('copy.toDate.year', 'El año de destino es obligatorio').not().isEmpty().isInt().withMessage('El año de destino debe ser un número entero'),
+        check('copy.toDate.month', 'El mes de destino es obligatorio').not().isEmpty().isInt().withMessage('El mes de destino debe ser un número entero'),
+    ],
+    SchdlCtrl().copySchedules.bind(SchdlCtrl())
+);
+
+
+
 export {
     routerSchdl
 }

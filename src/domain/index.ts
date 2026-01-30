@@ -3,7 +3,7 @@ export type { IUser } from "./users/iuser.domain";
 export type { UserBioDTO, checkTimeBioDTO, UserBio } from "./biometric/biometric";
 export type { IBiometric } from "./biometric/ibiometric.domain";
 
-export type { ScheduleFood, ScheduleFoodDTO, Schedule, ScheduleFilter, ScheduleDTO } from "./schedule/schedule";
+export type { ScheduleFood, ScheduleFoodDTO, Schedule, ScheduleFilter, ScheduleDTO, ScheduleCopy } from "./schedule/schedule";
 export type { ISchedule } from "./schedule/ischedule.domain";
 
 export type { ChecksDTO, Checks, CheckFilter, CheckCount } from "./checks/check";

@@ -5,6 +5,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import "dotenv/config";
 export class CredentialMiddleware {
     static validationJWT(req: Request, res: Response, next: NextFunction) {
+        
         const token: string = req.header('x-token') || '';
         if (!token){
              ResponseApi.notFoundResponse(res, 'Ingrese sus credenciales', null, 401);
