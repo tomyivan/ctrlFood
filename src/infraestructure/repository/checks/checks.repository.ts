@@ -1,4 +1,4 @@
-import type { IChecks, Checks, ChecksDTO, CheckFilter, CheckCount } from "../../../domain";
+import type { IChecks, Checks, ChecksDTO, CheckFilter, CheckCount, CheckCountByUserDTO } from "../../../domain";
 import type { Prisma } from "@prisma/client";
 import { ChecksQuery } from "../extendDB/checks.query";
 export class ChecksRepository implements IChecks {
@@ -28,6 +28,10 @@ export class ChecksRepository implements IChecks {
             }
         })
         return response.id_marca ?? 0;
+    }
+
+    getChecksCountByUser(startDate: string, endDate: string): Promise<CheckCountByUserDTO[]> {
+        return this._prisma.$queryRaw<CheckCountByUserDTO[]>(ChecksQuery.countCheckByEmployee(startDate, endDate));     
     }
 
 }

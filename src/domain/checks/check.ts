@@ -28,3 +28,13 @@ export interface CheckCount {
     tea: number,
     dinner: number
 }
+
+
+export interface CheckCountByUserDTO {
+    dni: string;
+    employee: string;
+    breakfast: number;
+    lunch: number;
+    te: number;
+    dinner: number;
+}

@@ -31,4 +31,22 @@ export class ChecksQuery {
   COALESCE(SUM(CASE WHEN id_horario = 4 THEN 1 ELSE 0 END), 0) AS dinner
 FROM marcas WHERE CAST(tiempo as DATE) = ${date}`
     }
+
+    static countCheckByEmployee(startDate: string, endDate: string): Prisma.Sql {
+        return Prisma.sql`WITH splitHorarios as
+        (
+        SELECT U.dni , U.nombre employee,
+        CASE WHEN M.id_horario = 1 THEN 1 ELSE 0 END AS breakfast,
+        CASE WHEN M.id_horario = 2 THEN 1 ELSE 0 END AS lunch,
+        CASE WHEN M.id_horario = 3 THEN 1 ELSE 0 END AS te,
+        CASE WHEN M.id_horario = 4 THEN 1 ELSE 0 END AS dinner
+        FROM usuarios U
+        INNER JOIN marcas M ON M.user_id = U.user_id
+        ${Prisma.sql`WHERE CAST(M.fecha AS DATE) BETWEEN ${startDate} AND ${endDate}`} )
+        select 
+        dni, employee, SUM(breakfast) breakfast, SUM(lunch) lunch, SUM(te) te, SUM(dinner) dinner
+        from splitHorarios 
+        GROUP BY dni, employee
+        order by dni`
+    }
 }

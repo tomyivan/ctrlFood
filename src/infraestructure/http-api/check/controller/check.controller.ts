@@ -3,8 +3,12 @@ import { Response, Request, NextFunction } from "express";
 import { ResponseApi } from "../../../../util";
 import path from "path";
 import fs from "fs";
+import { CheckGroupMapper } from "../../../mappers";
 export class ChecksController {
-    constructor(private readonly _checksApp: ChecksApplication) {}
+    constructor(private readonly _checksApp: ChecksApplication,
+        private readonly _groupData: CheckGroupMapper
+    ) {}
+ 
     async getAll(req: Request, res: Response, next: NextFunction) {
         try {
             const q = req.query;
@@ -23,8 +27,7 @@ export class ChecksController {
         }
         catch (error) {
             next(error);
-        }
-            
+        }           
     }
 
     async generateExcel(req: Request, res: Response, next: NextFunction) {
@@ -46,4 +49,14 @@ export class ChecksController {
             next(error);
         }
     }
+
+    async getChecksCountByUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { startDate, endDate } = req.query;
+            const response = await this._checksApp.getChecksCountByUser(startDate as string, endDate as string);
+            ResponseApi.successResponse(res, "Conteo de marcas por usuario", this._groupData.setData(response).getGroup());
+        }   catch (error) {
+            next(error);
+        }
+    }               
 }

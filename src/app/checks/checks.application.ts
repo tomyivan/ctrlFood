@@ -1,4 +1,4 @@
-import { CheckCount, CheckFilter, ChecksDTO, IChecks } from "../../domain";
+import { CheckCount, CheckCountByUserDTO, CheckFilter, ChecksDTO, IChecks } from "../../domain";
 import type { FormatExcel } from "./excel.service";
 export class ChecksApplication {
     constructor(private readonly _checksRepository: IChecks,
@@ -21,4 +21,7 @@ export class ChecksApplication {
         await excel.xlsx.writeFile(`${fileTitle}`);
     }
 
+    getChecksCountByUser(startDate: string, endDate: string): Promise<CheckCountByUserDTO[]> {
+        return this._checksRepository.getChecksCountByUser(startDate, endDate);
+    }
 }

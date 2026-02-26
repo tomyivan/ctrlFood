@@ -12,4 +12,10 @@ routerChk.get("/count", [
 ],checksController.checkCount.bind(checksController));
 routerChk.get("/excel", CredentialMiddleware.validationJWT,checksController.generateExcel.bind(checksController));
 
+routerChk.get("/countByUser", [
+    query("startDate").notEmpty().withMessage("La fecha de inicio es obligatoria"),
+    query("endDate").notEmpty().withMessage("La fecha de fin es obligatoria"),
+    validationField
+], CredentialMiddleware.validationJWT,checksController.getChecksCountByUser.bind(checksController));
+
 export { routerChk };
